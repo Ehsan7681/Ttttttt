@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم پیشرفته - احسان شمسی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #8a3fff;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --box-bg: #ffffff;
+            --border-color: #e1e4e8;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #6c7bff;
+            --secondary-color: #a366ff;
+            --text-color: #e0e0e0;
+            --bg-color: #121212;
+            --box-bg: #1e1e1e;
+            --border-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/vazir-font/30.1.0/Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .settings-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .translation-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .translation-container {
+                flex-direction: row;
+            }
+        }
+
+        .translation-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-color: var(--box-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .box-header select {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--box-bg);
+            color: var(--text-color);
+        }
+
+        .textarea-wrapper {
+            position: relative;
+            flex-grow: 1;
+            min-height: 200px;
+        }
+
+        .textarea-wrapper textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            border: none;
+            padding: 1rem;
+            resize: none;
+            background-color: var(--box-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .textarea-wrapper textarea:focus {
+            outline: none;
+        }
+
+        .textarea-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .textarea-controls button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .textarea-controls button:hover {
+            background-color: rgba(74, 107, 255, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--box-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            margin-top: auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--box-bg);
+            margin: 2rem auto;
+            padding: 1.5rem;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .tab-container {
+            margin-top: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-color);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--box-bg);
+            color: var(--text-color);
+        }
+
+        .api-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .batch-controls {
+            margin-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 0.5rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .status-message.success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-message.error {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--error-color);
+        }
+
+        .status-message.warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .subtitle-container {
+            margin-top: 1rem;
+        }
+
+        .subtitle-box {
+            background-color: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle-header {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .subtitle-content {
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+        <h1>مترجم پیشرفته</h1>
+        <button class="settings-btn" id="settingsBtn">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <div class="container">
+        <div class="translation-container">
+            <div class="translation-box">
+                <div class="box-header">
+                    <span>متن اصلی</span>
+                    <select id="sourceLanguage">
+                        <option value="auto">تشخیص خودکار</option>
+                        <option value="en">انگلیسی</option>
+                        <option value="fa">فارسی</option>
+                        <option value="ar">عربی</option>
+                        <option value="fr">فرانسوی</option>
+                        <option value="de">آلمانی</option>
+                        <option value="es">اسپانیایی</option>
+                        <option value="ru">روسی</option>
+                        <option value="zh">چینی</option>
+                        <option value="ja">ژاپنی</option>
+                        <option value="ko">کره‌ای</option>
+                    </select>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea id="sourceText" placeholder="متن خود را وارد کنید..."></textarea>
+                </div>
+                <div class="textarea-controls">
+                    <button id="clearSource"><i class="fas fa-trash"></i> پاک کردن</button>
+                    <button id="pasteSource"><i class="fas fa-paste"></i> جایگذاری</button>
+                </div>
+            </div>
+
+            <div class="translation-box">
+                <div class="box-header">
+                    <span>ترجمه</span>
+                    <select id="targetLanguage">
+                        <option value="fa">فارسی</option>
+                        <option value="en">انگلیسی</option>
+                        <option value="ar">عربی</option>
+                        <option value="fr">فرانسوی</option>
+                        <option value="de">آلمانی</option>
+                        <option value="es">اسپانیایی</option>
+                        <option value="ru">روسی</option>
+                        <option value="zh">چینی</option>
+                        <option value="ja">ژاپنی</option>
+                        <option value="ko">کره‌ای</option>
+                    </select>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea id="targetText" placeholder="ترجمه اینجا نمایش داده می‌شود..." readonly></textarea>
+                </div>
+                <div class="textarea-controls">
+                    <button id="clearTarget"><i class="fas fa-trash"></i> پاک کردن</button>
+                    <button id="copyTarget"><i class="fas fa-copy"></i> کپی</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="subtitle-container">
+            <div class="subtitle-box">
+                <div class="subtitle-header">زیرنویس اصلی:</div>
+                <div class="subtitle-content" id="sourceSubtitle"></div>
+            </div>
+            <div class="subtitle-box">
+                <div class="subtitle-header">زیرنویس ترجمه شده:</div>
+                <div class="subtitle-content" id="targetSubtitle"></div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="status-message" id="statusMessage" style="display: none;"></div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="translateBtn">
+                <i class="fas fa-language"></i> ترجمه
+            </button>
+            <button class="btn btn-secondary" id="stopBtn" style="display: none;">
+                <i class="fas fa-stop"></i> توقف
+            </button>
+            <button class="btn btn-secondary" id="resumeBtn" style="display: none;">
+                <i class="fas fa-play"></i> ادامه
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>توسعه داده شده توسط: احسان شمسی</p>
+    </footer>
+
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <span class="close" id="closeSettings">&times;</span>
+            <h2>تنظیمات</h2>
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="apiSettings">تنظیمات API</button>
+                    <button class="tab-btn" data-tab="translationSettings">تنظیمات ترجمه</button>
+                    <button class="tab-btn" data-tab="batchSettings">تنظیمات دسته‌ای</button>
+                </div>
+                
+                <div class="tab-content active" id="apiSettings">
+                    <div class="api-container">
+                        <div class="api-header">
+                            <h3>Google Gemini 1.5 Flash</h3>
+                            <input type="checkbox" id="useGemini15" checked>
+                        </div>
+                        <div class="form-group">
+                            <label for="gemini15Key">کلید API:</label>
+                            <input type="password" id="gemini15Key" placeholder="کلید API خود را وارد کنید">
+                        </div>
+                    </div>
+                    
+                    <div class="api-container">
+                        <div class="api-header">
+                            <h3>Google Gemini 2 Flash</h3>
+                            <input type="checkbox" id="useGemini2">
+                        </div>
+                        <div class="form-group">
+                            <label for="gemini2Key">کلید API:</label>
+                            <input type="password" id="gemini2Key" placeholder="کلید API خود را وارد کنید">
+                        </div>
+                    </div>
+                    
+                    <div class="api-container">
+                        <div class="api-header">
+                            <h3>OpenRouter</h3>
+                            <input type="checkbox" id="useOpenRouter">
+                        </div>
+                        <div class="form-group">
+                            <label for="openRouterKey">کلید API:</label>
+                            <input type="password" id="openRouterKey" placeholder="کلید API خود را وارد کنید">
+                        </div>
+                        <div class="form-group">
+                            <label for="openRouterModel">مدل:</label>
+                            <select id="openRouterModel">
+                                <option value="openai/gpt-4o">GPT-4o</option>
+                                <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
+                                <option value="anthropic/claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                                <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
+                                <option value="meta-llama/llama-3-70b-instruct">Llama 3 70B</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="api-container">
+                        <div class="api-header">
+                            <h3>OpenAI</h3>
+                            <input type="checkbox" id="useOpenAI">
+                        </div>
+                        <div class="form-group">
+                            <label for="openAIKey">کلید API:</label>
+                            <input type="password" id="openAIKey" placeholder="کلید API خود را وارد کنید">
+                        </div>
+                        <div class="form-group">
+                            <label for="openAIModel">مدل:</label>
+                            <select id="openAIModel">
+                                <option value="gpt-4o">GPT-4o</option>
+                                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="saveAPISettings">ذخیره تنظیمات</button>
+                </div>
+                
+                <div class="tab-content" id="translationSettings">
+                    <div class="form-group">
+                        <label for="defaultSourceLang">زبان پیش‌فرض متن اصلی:</label>
+                        <select id="defaultSourceLang">
+                            <option value="auto">تشخیص خودکار</option>
+                            <option value="en">انگلیسی</option>
+                            <option value="fa">فارسی</option>
+                            <option value="ar">عربی</option>
+                            <option value="fr">فرانسوی</option>
+                            <option value="de">آلمانی</option>
+                            <option value="es">اسپانیایی</option>
+                            <option value="ru">روسی</option>
+                            <option value="zh">چینی</option>
+                            <option value="ja">ژاپنی</option>
+                            <option value="ko">کره‌ای</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="defaultTargetLang">زبان پیش‌فرض ترجمه:</label>
+                        <select id="defaultTargetLang">
+                            <option value="fa">فارسی</option>
+                            <option value="en">انگلیسی</option>
+                            <option value="ar">عربی</option>
+                            <option value="fr">فرانسوی</option>
+                            <option value="de">آلمانی</option>
+                            <option value="es">اسپانیایی</option>
+                            <option value="ru">روسی</option>
+                            <option value="zh">چینی</option>
+                            <option value="ja">ژاپنی</option>
+                            <option value="ko">کره‌ای</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="saveTranslationSettings">ذخیره تنظیمات</button>
+                </div>
+                
+                <div class="tab-content" id="batchSettings">
+                    <div class="form-group">
+                        <label for="batchSize">اندازه دسته (تعداد خطوط در هر بسته):</label>
+                        <input type="number" id="batchSize" min="1" max="50" value="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="batchDelay">تاخیر بین دسته‌ها (میلی‌ثانیه):</label>
+                        <input type="number" id="batchDelay" min="0" max="5000" value="200">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="requestTimeout">زمان انتظار برای هر درخواست (ثانیه):</label>
+                        <input type="number" id="requestTimeout" min="5" max="120" value="30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maxRetries">حداکثر تلاش مجدد برای
